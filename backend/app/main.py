@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from urllib.parse import urlparse
 from typing import List
@@ -16,6 +17,14 @@ from services import (
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Phishing Detector com Histórico")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Dependency para sessão DB
 def get_db():
