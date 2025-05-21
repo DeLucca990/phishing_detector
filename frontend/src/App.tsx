@@ -69,7 +69,7 @@ export default function App() {
       <header className="w-full bg-white shadow-sm py-4">
         <div className="max-w-4xl mx-auto px-6 flex justify-between items-center">
           <h1 className="text-3xl font-extrabold text-gray-800">
-            Verificador de Phishing
+            Phishing Detector 🎣
           </h1>
           <Link
             to="/dashboard"
