@@ -17,7 +17,7 @@ O **Phishing Detector** é uma aplicação que analisa URLs para identificar pos
 - **backend/**: Contém a API desenvolvida com FastAPI e a lógica de análise de URLs.
 - **frontend/**: Interface do usuário desenvolvida em Vite.
 
-## Pré-requisitos
+## Pré-requisitos (Instalação Manual)
 
 - **Backend**:
   - Python 3.10 ou superior
@@ -27,9 +27,27 @@ O **Phishing Detector** é uma aplicação que analisa URLs para identificar pos
   - Node.js 18 ou superior
   - Gerenciador de pacotes `npm` ou `yarn`
 
-## Como Rodar a Aplicação
+## Rodar a Aplicação
 
-### Backend
+### Com Docker
+
+1. Certifique-se de ter o Docker instalado e em execução.
+
+2. Navegue até o diretório do projeto:
+   ```bash
+   cd phishing-detector
+   ```
+3. Construa e inicie os containers:
+   ```bash
+   docker-compose up --build
+   ```
+4. Acesse a aplicação no navegador:
+   - Frontend: [http://localhost:5173](http://localhost:5173)
+   - Backend: [http://localhost:8000](http://localhost:8000)
+
+### Instalação Manual
+
+**Backend**
 
 1. Navegue até o diretório do backend:
    ```bash
@@ -39,26 +57,27 @@ O **Phishing Detector** é uma aplicação que analisa URLs para identificar pos
 2. Crie um ambiente virtual (opcional, mas recomendado):
    ```bash
    python3 -m venv .venv
-   # Ative o ambiente virtual:
-   # No Windows: 
-   .venv\Scripts\activate
-   # No Linux/Mac: 
-   source .venv/bin/activate
    ```
 
-3. Instale as dependências:
+3. Ative o ambiente virtual:
+   ```bash
+   source .venv/bin/activate  # Linux/Mac
+   .venv\Scripts\activate  # Windows
+   ```
+
+4. Instale as dependências:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Inicie o servidor FastAPI:
+5. Inicie o servidor FastAPI:
    ```bash
    uvicorn app.main:app --reload
    ```
 
-5. A API estará disponível em: [http://localhost:8000](http://localhost:8000)
+6. A API estará disponível em: [http://localhost:8000](http://localhost:8000)
 
-### Frontend
+**Frontend**
 
 1. Navegue até o diretório do frontend:
    ```bash

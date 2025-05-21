@@ -3,7 +3,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.types import JSON
 from datetime import datetime
-from database import Base
+from .database import Base
 
 class CheckResult(Base):
     __tablename__ = "check_results"

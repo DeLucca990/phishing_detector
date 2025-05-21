@@ -4,10 +4,10 @@ from sqlalchemy.orm import Session
 from urllib.parse import urlparse
 from typing import List
 
-from database import engine, SessionLocal, Base
-from db_models import CheckResult
-from models import URLCheckRequest, URLCheckResult, URLCheckHistory, DomainSimilarity
-from services import (
+from .database import engine, SessionLocal, Base
+from .db_models import CheckResult
+from .models import URLCheckRequest, URLCheckResult, URLCheckHistory, DomainSimilarity
+from .services import (
     check_blacklist, has_suspicious_numbers, count_subdomains, has_special_chars,
     get_domain_age, get_dns_records, is_dynamic_dns, analyze_ssl,
     detect_redirects, find_similar_domains, analyze_content_advanced
