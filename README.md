@@ -2,7 +2,7 @@
 
 ## Descrição
 
-O **Phishing Detector** é uma aplicação que analisa URLs para identificar possíveis ameaças de phishing. Ele utiliza uma combinação de técnicas, como verificação de listas negras, análise de características da URL, validação de certificados SSL, e análise de conteúdo para determinar se uma URL é maliciosa. A aplicação é composta por um backend desenvolvido em Python com FastAPI e um frontend em React com TypeScript.
+O **Phishing Detector** é uma aplicação que analisa URLs para identificar possíveis ameaças de phishing. Ele utiliza uma combinação de técnicas, como verificação de listas negras, análise de características da URL, validação de certificados SSL, e análise de conteúdo para determinar se uma URL é maliciosa. A aplicação é composta por um backend desenvolvido em Python com FastAPI e um frontend em Vite.
 
 ## Funcionalidades
 
