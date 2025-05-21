@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+python-whois
+tldextract
+dnspython
+requests
+beautifulsoup4
+python-dotenv
+SQLAlchemy
