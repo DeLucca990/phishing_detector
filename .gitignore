@@ -182,7 +182,7 @@ cython_debug/
 
 # MacOS
 .DS_Store
-.db
+*.db
 
 # Frontend
 # Logs
