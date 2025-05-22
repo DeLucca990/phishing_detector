@@ -45,6 +45,8 @@ O **Phishing Detector** é uma aplicação que analisa URLs para identificar pos
    - Frontend: [http://localhost:5173](http://localhost:5173)
    - Backend: [http://localhost:8000](http://localhost:8000)
 
+5. _Obs: Talves seja necessário esperar alguns segundos após a construção do container para acessar a aplicação, uma vez que, provavelmente, esteja carregando o modelo de ML instalado._
+
 ### Instalação Manual
 
 **Backend**
