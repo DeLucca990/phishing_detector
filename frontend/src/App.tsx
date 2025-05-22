@@ -59,7 +59,20 @@ export default function App() {
   };
 
   const isMalicious = () => {
-    if (!result) return false;
+    if (!result) return false;    
+    if (result.ml_scores) {
+      const phishingScore = result.ml_scores.find(s => s.label.toLowerCase() === 'phishing');
+      const benignScore = result.ml_scores.find(s => s.label.toLowerCase() === 'benign');
+      
+      if (phishingScore && phishingScore.probability > 0.5) {
+        return true;
+      }
+      
+      if (benignScore && benignScore.probability > 0.5) {
+        return false;
+      }
+    }
+    
     return (
       result.blacklisted ||
       result.suspicious_numbers ||
@@ -95,7 +108,7 @@ export default function App() {
                   <div className="flex gap-4">
                     <input
                       type="text"
-                      placeholder="Digite a URL ou domínio"
+                      placeholder="Digite a URL ou domínio (ex: avelinux.com.br)"
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
                       className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-700"
