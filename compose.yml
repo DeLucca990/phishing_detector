@@ -17,6 +17,5 @@ services:
       target: backend-dev
     volumes:
       - ./backend:/app/backend
-      - ./phishing.db:/app/backend/phishing.db 
     ports:
       - "8000:8000"
