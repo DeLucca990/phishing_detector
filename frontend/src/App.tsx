@@ -108,7 +108,7 @@ export default function App() {
                   <div className="flex gap-4">
                     <input
                       type="text"
-                      placeholder="Digite a URL ou domínio (ex: avelinux.com.br)"
+                      placeholder="Digite a URL ou domínio (ex: facebook.com)"
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
                       className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-700"
@@ -168,6 +168,22 @@ export default function App() {
                                       <li key={label} className="flex justify-between">
                                         <span className="capitalize">{label}</span>
                                         <span>{(probability * 100).toFixed(2)}%</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              );
+                            }
+                            if (key === "similar_domains") {
+                              return (
+                                <div key={key} className="flex flex-col">
+                                  <span className="font-semibold text-gray-900 mb-1 capitalize">
+                                    Domínios Similares
+                                  </span>
+                                  <ul className="text-sm text-gray-800 list-disc list-inside space-y-1">
+                                    {(value as { brand: string; distance: number }[]).map(({ brand, distance }, index) => (
+                                      <li key={index}>
+                                        <span className="font-medium">{brand}</span>: distância {distance}
                                       </li>
                                     ))}
                                   </ul>
