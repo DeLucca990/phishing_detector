@@ -9,6 +9,10 @@ class DomainSimilarity(BaseModel):
     brand: str
     distance: int
 
+class MLScore(BaseModel):
+    label: str = Field(..., description="Classe predita pelo modelo")
+    probability: float = Field(..., ge=0, le=1, description="Probabilidade da classe")
+
 class URLCheckResult(BaseModel):
     url: str
     blacklisted: bool
@@ -43,6 +47,11 @@ class URLCheckResult(BaseModel):
     login_fields_found: bool
     sensitive_fields_found: List[str]
     suspicious_images: List[str]
+
+    # ML
+    ml_scores: List[MLScore] = Field(
+        ..., description="Lista de todas as classes com suas probabilidades"
+    )
 
 class URLCheckHistory(URLCheckResult):
     id: int

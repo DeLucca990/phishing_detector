@@ -1,5 +1,5 @@
 from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime
+    Column, Integer, String, Boolean, DateTime, Float
 )
 from sqlalchemy.types import JSON
 from datetime import datetime
@@ -37,3 +37,5 @@ class CheckResult(Base):
     login_fields_found = Column(Boolean)
     sensitive_fields_found = Column(JSON)
     suspicious_images = Column(JSON)
+
+    ml_scores = Column(JSON, nullable=True)

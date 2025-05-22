@@ -6,12 +6,13 @@ from typing import List
 
 from .database import engine, SessionLocal, Base
 from .db_models import CheckResult
-from .models import URLCheckRequest, URLCheckResult, URLCheckHistory, DomainSimilarity
+from .models import URLCheckRequest, URLCheckResult, URLCheckHistory, DomainSimilarity, MLScore
 from .services import (
     check_blacklist, has_suspicious_numbers, count_subdomains, has_special_chars,
     get_domain_age, get_dns_records, is_dynamic_dns, analyze_ssl,
     detect_redirects, find_similar_domains, analyze_content_advanced
 )
+from .service_ml import ml_predict 
 
 # Cria tabelas
 Base.metadata.create_all(bind=engine)
@@ -54,6 +55,7 @@ async def check_url(req: URLCheckRequest, db: Session = Depends(get_db)):
     redirects = detect_redirects(raw)
     sims = find_similar_domains(host, threshold=0.75)
     forms, login, sens, imgs = analyze_content_advanced(raw)
+    ml_scores = ml_predict(raw)
 
     # Persiste no DB
     entry = CheckResult(
@@ -66,7 +68,8 @@ async def check_url(req: URLCheckRequest, db: Session = Depends(get_db)):
         ssl_expiration_date=exp, ssl_domain_match=match,
         redirects=redirects, similar_domains=[dict(s) for s in sims],
         forms_found=forms, login_fields_found=login,
-        sensitive_fields_found=sens, suspicious_images=imgs
+        sensitive_fields_found=sens, suspicious_images=imgs,
+        ml_scores=[{"label": l, "probability": p} for l,p in ml_scores]
     )
     db.add(entry)
     db.commit()
@@ -85,7 +88,8 @@ async def check_url(req: URLCheckRequest, db: Session = Depends(get_db)):
         forms_found=forms,
         login_fields_found=login,
         sensitive_fields_found=sens,
-        suspicious_images=imgs
+        suspicious_images=imgs,
+        ml_scores=[MLScore(label=l, probability=p) for l,p in ml_scores]
     )
 
 @app.get("/history", response_model=List[URLCheckHistory])
