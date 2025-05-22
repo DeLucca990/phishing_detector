@@ -49,9 +49,10 @@ interface HistoryItem {
   login_fields_found: boolean;
   sensitive_fields_found: string[];
   suspicious_images: string[];
+  ml_scores: { label: string; probability: number }[];
 }
 
-const animationStyles = document.createElement('style');
+const animationStyles = document.createElement("style");
 animationStyles.innerHTML = `
   @keyframes fadeIn {
     from { opacity: 0; }
@@ -262,7 +263,7 @@ export default function Dashboard() {
           <span>Histórico de Análises</span>
           <div className="text-xs text-gray-500 flex items-center">
             <span className="mr-1">Deslize</span>
-            <ArrowLeft className="w-3 h-3 mr-1" /> 
+            <ArrowLeft className="w-3 h-3 mr-1" />
             <ArrowLeft className="w-3 h-3 transform rotate-180" />
           </div>
         </h2>
@@ -271,17 +272,40 @@ export default function Dashboard() {
             <thead>
               <tr className="bg-gray-50 text-left">
                 <th className="p-4 font-medium text-gray-600">#</th>
-                <th className="p-4 font-medium text-gray-600">Data de Adição</th>
+                <th className="p-4 font-medium text-gray-600">
+                  Data de Adição
+                </th>
                 <th className="p-4 font-medium text-gray-600">URL</th>
-                <th className="p-4 font-medium text-gray-600 text-center">Status</th>
-                <th className="p-4 font-medium text-gray-600 text-center">Sus. Numbers</th>
-                <th className="p-4 font-medium text-gray-600 text-center">Subdomains</th>
-                <th className="p-4 font-medium text-gray-600 text-center">Spec. Chars</th>
-                <th className="p-4 font-medium text-gray-600 text-center">Dyn. DNS</th>
-                <th className="p-4 font-medium text-gray-600 text-center">SSL Valid</th>
-                <th className="p-4 font-medium text-gray-600 text-center">Domain Age</th>
-                <th className="p-4 font-medium text-gray-600 text-center">Forms</th>
-                <th className="p-4 font-medium text-gray-600 text-center">Login Fields</th>
+                <th className="p-4 font-medium text-gray-600 text-center">
+                  Status
+                </th>
+                <th className="p-4 font-medium text-gray-600 text-center">
+                  Sus. Numbers
+                </th>
+                <th className="p-4 font-medium text-gray-600 text-center">
+                  Subdomains
+                </th>
+                <th className="p-4 font-medium text-gray-600 text-center">
+                  Spec. Chars
+                </th>
+                <th className="p-4 font-medium text-gray-600 text-center">
+                  Dyn. DNS
+                </th>
+                <th className="p-4 font-medium text-gray-600 text-center">
+                  SSL Valid
+                </th>
+                <th className="p-4 font-medium text-gray-600 text-center">
+                  Domain Age
+                </th>
+                <th className="p-4 font-medium text-gray-600 text-center">
+                  Forms
+                </th>
+                <th className="p-4 font-medium text-gray-600 text-center">
+                  Login Fields
+                </th>
+                <th className="p-4 font-medium text-gray-600 text-center">
+                  ML Classification
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -350,23 +374,63 @@ export default function Dashboard() {
                       "-"
                     )}
                   </td>
-                    <td className="p-4 text-center">
-                    {item.domain_age_days !== undefined && item.domain_age_days !== null ? (
-                      <span className={item.domain_age_days < 30 ? "text-red-500 font-medium" : "text-gray-600"}>
-                      {item.domain_age_days} dias
+                  <td className="p-4 text-center">
+                    {item.domain_age_days !== undefined &&
+                    item.domain_age_days !== null ? (
+                      <span
+                        className={
+                          item.domain_age_days < 30
+                            ? "text-red-500 font-medium"
+                            : "text-gray-600"
+                        }
+                      >
+                        {item.domain_age_days} dias
                       </span>
                     ) : (
                       "-"
                     )}
-                    </td>
+                  </td>
                   <td className="p-4 text-center">
-                    <span className={item.forms_found > 0 ? "text-amber-600 font-medium" : "text-gray-600"}>
+                    <span
+                      className={
+                        item.forms_found > 0
+                          ? "text-amber-600 font-medium"
+                          : "text-gray-600"
+                      }
+                    >
                       {item.forms_found}
                     </span>
                   </td>
                   <td className="p-4 text-center">
                     {item.login_fields_found ? (
                       <AlertTriangle className="w-5 h-5 text-amber-500 mx-auto" />
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td className="p-4 text-center">
+                    {item.ml_scores.length > 0 ? (
+                      item.ml_scores.some(
+                        (score) =>
+                          score.label === "phishing" && score.probability > 0.5
+                      ) ? (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          <AlertTriangle className="w-3.5 h-3.5 mr-1" />
+                          Phishing
+                        </span>
+                      ) : item.ml_scores.some(
+                          (score) =>
+                            score.label === "benign" && score.probability > 0.5
+                        ) ? (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          <ShieldCheck className="w-3.5 h-3.5 mr-1" />
+                          Seguro
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                          -
+                        </span>
+                      )
                     ) : (
                       "-"
                     )}
@@ -380,7 +444,7 @@ export default function Dashboard() {
 
       {/* Modal de Detalhes */}
       {selected && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-[fadeIn_0.2s]"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
@@ -416,10 +480,9 @@ export default function Dashboard() {
                 };
 
                 const explanation = getExplanation(key);
-                
-                // Determine if this is a risky attribute with a positive value
-                const isRisky = (
-                  (key === "blacklisted" && value === true) || 
+
+                const isRisky =
+                  (key === "blacklisted" && value === true) ||
                   (key === "suspicious_numbers" && value === true) ||
                   (key === "excessive_subdomains" && value === true) ||
                   (key === "special_chars" && value === true) ||
@@ -429,13 +492,47 @@ export default function Dashboard() {
                   (key === "ssl_domain_match" && value === false) ||
                   (key === "login_fields_found" && value === true) ||
                   (key === "forms_found" && Number(value) > 0) ||
-                  (key === "similar_domains" && Array.isArray(value) && value.length > 0)
-                );
+                  (key === "similar_domains" &&
+                    Array.isArray(value) &&
+                    value.length > 0);
+
+                if (key === "ml_scores") {
+                  return (
+                    <div
+                      key={key}
+                      className={`flex flex-col p-3 ${
+                        isRisky ? "bg-red-50" : "bg-gray-50"
+                      } rounded-2xl`}
+                    >
+                      <span className="font-semibold text-gray-900 mb-2 capitalize flex items-center gap-1">
+                        {getIcon()}
+                        {key.replace(/_/g, " ")}
+                      </span>
+                      <ul className="text-sm break-all bg-white p-2 rounded-2xl border border-gray-100 mb-2">
+                        {value.map(
+                          (
+                            score: { label: string; probability: number },
+                            index: number
+                          ) => (
+                            <li key={index}>
+                              {score.label.charAt(0).toUpperCase() + score.label.slice(1)}: {(score.probability*100).toFixed(2)}%
+                            </li>
+                          )
+                        )}
+                      </ul>
+                      <p className="text-xs text-gray-600 italic border-l-2 pl-2 border-gray-300">
+                        {explanation}
+                      </p>
+                    </div>
+                  );
+                }
 
                 return (
                   <div
                     key={key}
-                    className={`flex flex-col p-3 ${isRisky ? "bg-red-50" : "bg-gray-50"} rounded-2xl`}
+                    className={`flex flex-col p-3 ${
+                      isRisky ? "bg-red-50" : "bg-gray-50"
+                    } rounded-2xl`}
                   >
                     <span className="font-semibold text-gray-900 mb-2 capitalize flex items-center gap-1">
                       {getIcon()}

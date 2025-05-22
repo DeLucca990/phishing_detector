@@ -24,6 +24,10 @@ interface URLCheckResult {
   login_fields_found: boolean;
   sensitive_fields_found: string[];
   suspicious_images: string[];
+  ml_scores: {
+    label: string;
+    probability: number;
+  }[];
 }
 
 export default function App() {
@@ -136,20 +140,38 @@ export default function App() {
                     </div>
 
                     <div className="flex flex-col lg:flex-row gap-6">
+                      {/* Card principal: demais campos + ml_scores */}
                       <div className="flex-1 bg-white p-6 rounded-xl">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
-                          {Object.entries(result).map(([key, value]) => (
-                            <div key={key} className="flex flex-col">
-                              <span className="font-semibold text-gray-900 mb-1 capitalize">
-                                {key.replace(/_/g, " ")}
-                              </span>
-                              <span className="text-sm text-gray-800 whitespace-normal break-all">
-                                {Array.isArray(value)
-                                  ? value.join(", ")
-                                  : String(value)}
-                              </span>
-                            </div>
-                          ))}
+                          {Object.entries(result).map(([key, value]) => {
+                            if (key === "ml_scores") {
+                              return (
+                                <div key={key} className="flex flex-col">
+                                  <span className="font-semibold text-gray-900 mb-1">
+                                    Machine Learning Scores
+                                  </span>
+                                  <ul className="text-sm text-gray-800 list-disc list-inside space-y-1">
+                                    {(value as { label: string; probability: number }[]).map(({ label, probability }) => (
+                                      <li key={label} className="flex justify-between">
+                                        <span className="capitalize">{label}</span>
+                                        <span>{(probability * 100).toFixed(2)}%</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              );
+                            }
+                            return (
+                              <div key={key} className="flex flex-col">
+                                <span className="font-semibold text-gray-900 mb-1 capitalize">
+                                  {key.replace(/_/g, " ")}
+                                </span>
+                                <span className="text-sm text-gray-800 whitespace-normal break-all">
+                                  {Array.isArray(value) ? value.join(", ") : String(value)}
+                                </span>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
 
@@ -261,6 +283,10 @@ export default function App() {
                                 Suspicious Images
                               </span>
                               : URLs de imagens com marcas conhecidas
+                            </li>
+                            <li>
+                              <span className="font-semibold">ML Scores</span>:
+                              Resultados de classificação pelo modelo de ML
                             </li>
                           </ul>
                         </div>
