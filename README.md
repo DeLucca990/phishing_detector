@@ -39,7 +39,7 @@ O **Phishing Detector** é uma aplicação que analisa URLs para identificar pos
    ```
 3. Construa e inicie os containers:
    ```bash
-   docker-compose up --build
+   docker-compose up
    ```
 4. Acesse a aplicação no navegador:
    - Frontend: [http://localhost:5173](http://localhost:5173)
